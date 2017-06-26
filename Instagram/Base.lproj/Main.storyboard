@@ -78,7 +78,7 @@
         <!--New Post-->
         <scene sceneID="v0q-26-Gc8">
             <objects>
-                <viewController id="l78-1S-kHc" sceneMemberID="viewController">
+                <viewController id="l78-1S-kHc" customClass="NewPostViewController" customModule="Instagram" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="lfP-Bk-D2b"/>
                         <viewControllerLayoutGuide type="bottom" id="eg8-WZ-LAp"/>
