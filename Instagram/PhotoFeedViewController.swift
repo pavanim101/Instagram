@@ -7,9 +7,17 @@
 //
 
 import UIKit
+import Parse
+import ParseUI
 
-class PhotoFeedViewController: UIViewController {
+class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    
+    @IBOutlet weak var postsTableView: UITableView!
+    
+    var posts: [PFObject] = []
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,14 +30,43 @@ class PhotoFeedViewController: UIViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return self.posts.count
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
-    */
-
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
+        
+        if posts[indexPath.row]["author"] != nil {
+            let user = posts[indexPath.row]["author"] as! PFUser
+            cell.userNameLabel.text = user.username!
+            
+        }
+        
+        let likeCount = posts[indexPath.row]["likesCount"] as! Int
+        cell.likesLabel.text = String(likeCount) + " likes"
+        
+        return cell
+    }
+    
+    func queryParse() {
+        let query = PFQuery(className: "Post")
+        query.addDescendingOrder("createdAt")
+        query.includeKey("author")
+        query.limit = 20
+        
+        query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) in
+            if let posts = posts {
+                self.posts = posts
+                self.postsTableView.reloadData()
+                
+            }
+            else {
+                print(error!.localizedDescription)
+            }
+        }
+    
+    }
 }
