@@ -7,9 +7,26 @@
 //
 
 import UIKit
+import Parse
+import ParseUI
 
 class PostTableViewCell: UITableViewCell {
 
+    
+    @IBOutlet weak var userNameLabel: UILabel!
+    
+    @IBOutlet weak var photoImageView: PFImageView!
+    
+    
+    @IBOutlet weak var likesLabel: UILabel!
+    
+    var instagramPost: PFObject! {
+        didSet {
+            self.photoImageView.file = instagramPost["media"] as? PFFile
+            self.photoImageView.loadInBackground()
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
