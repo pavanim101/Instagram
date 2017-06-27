@@ -111,6 +111,9 @@
                                 <state key="normal" title="Post">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
+                                <connections>
+                                    <action selector="createPost:" destination="l78-1S-kHc" eventType="touchUpInside" id="j8p-HE-evv"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vOe-xr-gFH">
                                 <rect key="frame" x="232" y="223" width="131" height="30"/>
