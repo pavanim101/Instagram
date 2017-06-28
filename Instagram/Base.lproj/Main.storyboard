@@ -134,7 +134,7 @@
             </objects>
             <point key="canvasLocation" x="1812" y="136.28185907046478"/>
         </scene>
-        <!--Photo Feed View Controller-->
+        <!--Instagram-->
         <scene sceneID="Mpb-NP-31l">
             <objects>
                 <viewController id="7rL-Q5-jaB" customClass="PhotoFeedViewController" customModule="Instagram" customModuleProvider="target" sceneMemberID="viewController">
@@ -176,9 +176,17 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="caption " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekE-Nn-pyY">
+                                                    <rect key="frame" x="18" y="420" width="319" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="captionLabel" destination="ekE-Nn-pyY" id="709-em-sec"/>
                                             <outlet property="likesLabel" destination="XbS-gQ-OoS" id="Zoh-0E-M8u"/>
                                             <outlet property="photoImageView" destination="c8J-Vr-nZz" id="rxt-iQ-eT6"/>
                                             <outlet property="userNameLabel" destination="Fia-rU-gi7" id="A06-Uj-n8N"/>
@@ -189,7 +197,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="TFV-Up-NIg"/>
+                    <navigationItem key="navigationItem" title="Instagram" id="TFV-Up-NIg"/>
                     <connections>
                         <outlet property="postsTableView" destination="mSb-8V-kac" id="cdc-iC-4Jf"/>
                     </connections>
@@ -202,7 +210,7 @@
         <scene sceneID="FXF-V0-k8Q">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="H7T-qC-UKU" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" id="2Kx-sC-BsB"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="superhero_tabbar_item" id="2Kx-sC-BsB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="eXO-1g-WTW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -239,7 +247,7 @@
         <scene sceneID="9oD-fW-kuf">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Dnb-Is-rDg" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Capture" id="ToX-Si-ZJH"/>
+                    <tabBarItem key="tabBarItem" title="Capture" image="projector_tabbar_item" selectedImage="projector_tabbar_item" id="ToX-Si-ZJH"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="TWE-Hh-FcX">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -255,4 +263,8 @@
             <point key="canvasLocation" x="872.79999999999995" y="136.28185907046478"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="projector_tabbar_item" width="21" height="25"/>
+        <image name="superhero_tabbar_item" width="21" height="23"/>
+    </resources>
 </document>
