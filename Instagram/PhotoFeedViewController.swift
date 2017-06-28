@@ -6,6 +6,8 @@
 //  Copyright © 2017 Pavani Malli. All rights reserved.
 //
 
+//TODO: click on username for profile, likes, posts specific to user
+
 import UIKit
 import Parse
 import ParseUI
@@ -21,22 +23,34 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let refreshControl = UIRefreshControl()
+        
+        refreshControl.addTarget(self, action: #selector (PhotoFeedViewController.didPullToRefresh(_:)), for: .valueChanged)
+        
+        postsTableView.insertSubview(refreshControl, at:0)
+
+        
         postsTableView.dataSource = self
         postsTableView.delegate = self
         
         // Fetch messages every second
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.queryParse), userInfo: nil, repeats: true)
-        
-        
+    
 
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
     }
     
+    func didPullToRefresh(_ refreshControl: UIRefreshControl) {
+        queryParse()
+        
+        self.postsTableView.reloadData()
+        
+        refreshControl.endRefreshing()
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -47,11 +61,12 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
         
-        if posts[indexPath.row]["author"] != nil {
-            let user = posts[indexPath.row]["author"] as! PFUser
-            cell.userNameLabel.text = user.username!
-            
-        }
+       
+        let user = posts[indexPath.row]["author"] as! PFUser
+        cell.userNameLabel.text = user.username!
+
+        let caption = posts[indexPath.row]["caption"] as! String
+        cell.captionLabel.text = caption
         
         let likeCount = posts[indexPath.row]["likesCount"] as! Int
         cell.likesLabel.text = String(likeCount) + " likes"
@@ -59,6 +74,19 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.instagramPost = posts[indexPath.row]
         
         return cell
+    }
+    
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let cell = sender as! PostTableViewCell
+        if let indexPath = postsTableView.indexPath(for: cell){
+            let post = posts[indexPath.row]
+            let postDetailViewController = segue.destination as! DetailViewController
+            postDetailViewController.post = post
+        }
+        
+        
     }
     
     func queryParse() {
@@ -79,4 +107,5 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     
     }
+    
 }
