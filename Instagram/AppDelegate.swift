@@ -26,6 +26,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         )
         
+        print(PFUser.current())
+        
+        if PFUser.current() != nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let photoFeedViewController = storyboard.instantiateViewController(withIdentifier: "tabBarController")
+            window?.rootViewController = photoFeedViewController
+        }
+        
         return true
     }
 
