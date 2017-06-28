@@ -42,8 +42,7 @@ class LoginViewController: UIViewController {
     }
     
     
-    
-    @IBAction func loginUser(_ sender: UIButton) {
+    @IBAction func logInUser(_ sender: UIButton) {
         let username = usernameField.text ?? ""
         let password = passwordField.text ?? ""
         
@@ -52,6 +51,7 @@ class LoginViewController: UIViewController {
             self.usernameError()
         }
         else {
+            print("logging in")
             PFUser.logInWithUsername(inBackground: username, password: password) { (user:PFUser?, error:Error?) in
                 if let error = error {
                     print("User log in failed: \(error.localizedDescription)")
@@ -61,9 +61,8 @@ class LoginViewController: UIViewController {
                 }
             }
         }
-
-    }
     
+    }
     
     
     func usernameError() {
@@ -80,13 +79,7 @@ class LoginViewController: UIViewController {
         }
         
     }
-    
-    
-    
-    
-    
-    
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
