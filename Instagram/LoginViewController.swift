@@ -17,6 +17,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordField: UITextField!
     
     
+    
     @IBAction func registerUser(_ sender: UIButton) {
         let newUser = PFUser()
         
@@ -32,8 +33,8 @@ class LoginViewController: UIViewController {
                     print(error.localizedDescription)
                     
                 } else {
-                    print("User Resgistered Succesfully")
-                    self.performSegue(withIdentifier: "loginSegue", sender: nil)
+                    print("User Registered Succesfully")
+                    self.performSegue(withIdentifier: "signupSegue", sender: nil)
                 }
                 
             }
