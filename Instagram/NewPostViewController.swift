@@ -26,7 +26,7 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         self.openCameraRoll()
         
-        self.captionString = captionTextField.text
+
         // Do any additional setup after loading the view.
     }
 
@@ -39,14 +39,16 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         
+        let imageData = UIImageJPEGRepresentation(originalImage, 0.2)!
 
-        photoImageView.image = originalImage
-        self.photoToPost = originalImage
+        self.photoImageView.image = originalImage
+        
+        self.photoToPost = UIImage(data: imageData)
         
         dismiss(animated: true, completion: nil)
     }
-
     
+       
     @IBAction func selectPhoto(_ sender: UIButton) {
         self.openCameraRoll()
     }
@@ -64,6 +66,9 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
 
     @IBAction func createPost(_ sender: UIButton) {
         print("about to post")
+        self.captionString = captionTextField.text ?? ""
+        print(self.captionString)
+        
         Post.postUserImage(image: self.photoToPost, withCaption: self.captionString, withCompletion: { (success, error) in
             if success {
                 print("The message was saved!")
@@ -71,6 +76,8 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
                 print("Problem saving message: \(error.localizedDescription)")
             }
         })
+        
+        captionTextField.text = ""
     }
 
 
