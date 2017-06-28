@@ -50,10 +50,16 @@ class DetailViewController: UIViewController {
             
             self.instagramPost = post
             
-            //let timestamp = post["_created_at"] as! Date
+            let timeStamp = post.createdAt as! Date
             
             
-
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            let dateString = dateFormatter.string(from: timeStamp)
+            timestampLabel.text = dateString
+            
+        
         }
         
         
