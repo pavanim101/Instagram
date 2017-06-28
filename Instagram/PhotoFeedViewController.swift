@@ -20,6 +20,14 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        postsTableView.dataSource = self
+        postsTableView.delegate = self
+        
+        // Fetch messages every second
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.queryParse), userInfo: nil, repeats: true)
+        
+        
 
         // Do any additional setup after loading the view.
     }
@@ -47,6 +55,8 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let likeCount = posts[indexPath.row]["likesCount"] as! Int
         cell.likesLabel.text = String(likeCount) + " likes"
+        
+        cell.instagramPost = posts[indexPath.row]
         
         return cell
     }
