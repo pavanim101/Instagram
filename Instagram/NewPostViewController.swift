@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -19,6 +20,9 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     var captionString: String!
     
     
+    @IBAction func tapGesture(_ sender: Any) {
+        view.endEditing(true)
+    }
     
     
     override func viewDidLoad() {
@@ -65,13 +69,17 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
 
     @IBAction func createPost(_ sender: UIButton) {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+
         print("about to post")
         self.captionString = captionTextField.text ?? ""
         print(self.captionString)
         
         Post.postUserImage(image: self.photoToPost, withCaption: self.captionString, withCompletion: { (success, error) in
             if success {
-                print("The message was saved!")
+                print("Post was saved!")
+                 MBProgressHUD.hide(for: self.view, animated: true)
+                
             } else if let error = error {
                 print("Problem saving message: \(error.localizedDescription)")
             }
