@@ -227,8 +227,8 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="uL6-nk-nst">
-                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="uL6-nk-nst">
+                                <rect key="frame" x="177" y="64" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                         </subviews>
@@ -282,18 +282,27 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="likes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B7V-Dg-PvJ">
-                                <rect key="frame" x="7" y="491" width="343" height="43"/>
+                                <rect key="frame" x="36" y="491" width="314" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GHY-18-adB">
+                                <rect key="frame" x="7" y="499" width="21" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button" image="heart-7"/>
+                                <connections>
+                                    <action selector="likePost:" destination="AMc-QH-92n" eventType="touchUpInside" id="hn1-IO-Bvo"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Post Detail" id="0wg-uF-aD8"/>
                     <connections>
                         <outlet property="captionLabel" destination="Jrt-RB-HEe" id="biT-vw-Bs3"/>
+                        <outlet property="likeButton" destination="GHY-18-adB" id="XlW-Cm-dv2"/>
                         <outlet property="likesLabel" destination="B7V-Dg-PvJ" id="LyK-mC-tJw"/>
                         <outlet property="photoImageView" destination="o8k-JH-wA5" id="DCH-yf-ghU"/>
                         <outlet property="timestampLabel" destination="IeC-LK-yRG" id="kHU-al-7Yw"/>
