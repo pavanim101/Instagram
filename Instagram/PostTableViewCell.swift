@@ -12,6 +12,7 @@ import ParseUI
 
 class PostTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var likeButton: UIButton!
     
     @IBOutlet weak var userNameLabel: UILabel!
     
@@ -28,6 +29,8 @@ class PostTableViewCell: UITableViewCell {
         }
     }
     
+    var currentID: String!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -38,5 +41,19 @@ class PostTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    
+    @IBAction func likePost(_ sender: UIButton) {
+        let query = PFQuery(className: "Post")
+        query.getObjectInBackground(withId: self.currentID) { (updatedObject: PFObject?,error: Error?) in
+            if let updatedObject = updatedObject {
+                updatedObject["likesCount"] = updatedObject["likesCount"] as! Int + 1
+                updatedObject.saveInBackground()
+                
+            }
+            
+        }
+       }
+    
 
 }
