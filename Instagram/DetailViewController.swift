@@ -14,6 +14,7 @@ class DetailViewController: UIViewController {
 
     var post: PFObject!
     
+    @IBOutlet weak var likeButton: UIButton!
     
     @IBOutlet weak var userLabel: UILabel!
     
@@ -34,10 +35,39 @@ class DetailViewController: UIViewController {
         }
     }
     
+    var currentID: String!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.fetchPostData), userInfo: nil, repeats: true)
+    }
+    
+    
+    @IBAction func likePost(_ sender: UIButton) {
+        let query = PFQuery(className: "Post")
+        print("RUNNING")
+        query.getObjectInBackground(withId: self.currentID) { (updatedObject: PFObject?,error: Error?) in
+            if let updatedObject = updatedObject {
+                print(self.currentID)
+                updatedObject["likesCount"] = updatedObject["likesCount"] as! Int + 1
+                updatedObject.saveInBackground()
+                
+            } else {
+                print("Error with likes" + error!.localizedDescription)
+            }
+            
+        }
+    }
+    
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func fetchPostData() {
         if let post = post {
             let user = post["author"] as! PFUser
             userLabel.text = user.username!
@@ -46,7 +76,13 @@ class DetailViewController: UIViewController {
             captionLabel.text = caption
             
             let likeCount = post["likesCount"] as! Int
-            likesLabel.text = String(likeCount) + " likes"
+            if likeCount == 1 {
+                likesLabel.text = String(likeCount) + " like"
+            } else {
+                likesLabel.text = String(likeCount) + " likes"
+            }
+            
+            
             
             self.instagramPost = post
             
@@ -59,23 +95,9 @@ class DetailViewController: UIViewController {
             let dateString = dateFormatter.string(from: timeStamp)
             timestampLabel.text = dateString
             
-        
+            
         }
-        
-        
-        
-        
-        
-        
-
-        // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
 
     
 
