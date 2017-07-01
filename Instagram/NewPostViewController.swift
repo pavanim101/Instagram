@@ -8,9 +8,10 @@
 
 import UIKit
 import MBProgressHUD
+import Sharaku
 
 class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    
     @IBOutlet weak var photoImageView: UIImageView!
     
     @IBOutlet weak var captionTextField: UITextField!
@@ -21,7 +22,6 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     var sourceType: String!
     
-    
     @IBAction func tapGesture(_ sender: Any) {
         view.endEditing(true)
     }
@@ -30,11 +30,12 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        //Sets properties to inital imageView
         self.photoImageView.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).cgColor
         
         self.photoImageView.layer.borderWidth = 2
         
+        //OPens up photo library or camera depending on device availibity
         let vc = UIImagePickerController()
         vc.delegate = self
         vc.allowsEditing = true
@@ -47,18 +48,18 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         self.present(vc, animated: true, completion: nil)
     }
-
-   
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
+    //Sets selected or captured image to the imageView and photo parameter variable to save to Parse
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         
         let imageData = UIImageJPEGRepresentation(originalImage, 0.2)!
-
+        
         self.photoImageView.image = originalImage
         self.photoImageView.layer.borderColor = UIColor(red: 255, green: 255, blue: 255, alpha: 1.0).cgColor
         self.photoToPost = UIImage(data: imageData)
@@ -66,12 +67,13 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         dismiss(animated: true, completion: nil)
     }
     
-       
+    
+    //If selectPhoto button is clicked
     @IBAction func selectPhoto(_ sender: UIButton) {
         self.openPhotoSource(source: "photoLibrary")
     }
-
     
+    //If takePhoto button is clicked
     @IBAction func takePhoto(_ sender: UIButton) {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             self.openPhotoSource(source: "camera")
@@ -80,11 +82,12 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
+    //Method that opens either camerea or photo library depending on paramter
     func openPhotoSource(source:String){
         let vc = UIImagePickerController()
         vc.delegate = self
         vc.allowsEditing = true
-    
+        
         
         if source == "camera" {
             vc.sourceType = UIImagePickerControllerSourceType.camera
@@ -97,10 +100,10 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     
     
-    
+    //If post button is clicked, passes in necessary parameters to postUserImage() to send data to Parse
     @IBAction func createPost(_ sender: UIButton) {
         MBProgressHUD.showAdded(to: self.view, animated: true)
-
+        
         print("about to post")
         self.captionString = captionTextField.text ?? ""
         print(self.captionString)
@@ -108,7 +111,7 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         Post.postUserImage(image: self.photoToPost, withCaption: self.captionString, withCompletion: { (success, error) in
             if success {
                 print("Post was saved!")
-                 MBProgressHUD.hide(for: self.view, animated: true)
+                MBProgressHUD.hide(for: self.view, animated: true)
                 
             } else if let error = error {
                 print("Problem saving message: \(error.localizedDescription)")
@@ -117,7 +120,8 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         captionTextField.text = ""
     }
-
+    
+    //Alert notification if camera is not available
     func cameraError() {
         let alertController = UIAlertController(title: "Camera not available", message: "Please select from photo library", preferredStyle: .alert)
         
@@ -133,7 +137,4 @@ class NewPostViewController: UIViewController, UIImagePickerControllerDelegate, 
         
     }
     
-
-
-
 }

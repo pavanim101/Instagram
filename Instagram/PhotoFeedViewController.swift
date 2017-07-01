@@ -6,16 +6,14 @@
 //  Copyright © 2017 Pavani Malli. All rights reserved.
 //
 
-//TODO:  likes, progress loading, infinite scrolling, camera/filters, auto layout, aesthetics
+//TODO:  filters, autolayout
 import UIKit
 import Parse
 import ParseUI
 
 class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     
     @IBOutlet weak var postsTableView: UITableView!
     
@@ -24,34 +22,36 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
     var queryLimit: Int = 20
     
     override func viewWillAppear(_ animated: Bool) {
-        activityIndicator.startAnimating()
-        
+        self.activityIndicator.startAnimating()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Pull to refresh
         let refreshControl = UIRefreshControl()
         
         refreshControl.addTarget(self, action: #selector (PhotoFeedViewController.didPullToRefresh(_:)), for: .valueChanged)
         
+        //Fetches data every second
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.queryParse), userInfo: nil, repeats: true)
+        
+        
         postsTableView.insertSubview(refreshControl, at:0)
-
         
         postsTableView.dataSource = self
         postsTableView.delegate = self
         
-        // Fetch messages every second
-        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.queryParse), userInfo: nil, repeats: true)
-    
-
+        
+        
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
     }
     
+    //Pull to refresh function
     func didPullToRefresh(_ refreshControl: UIRefreshControl) {
         queryParse()
         
@@ -59,48 +59,64 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
         
         refreshControl.endRefreshing()
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.posts.count
-
+        
     }
     
+    //Populates all fields defined in PostCell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! PostTableViewCell
         
         let user = posts[indexPath.row]["author"] as! PFUser
         cell.userNameLabel.text = user.username!
-
+        cell.userCaptionLabel.text = user.username!
+        
         let caption = posts[indexPath.row]["caption"] as! String
         cell.captionLabel.text = caption
         
         
         let likeCount = posts[indexPath.row]["likesCount"] as! Int
         if likeCount == 1 {
-        cell.likesLabel.text = String(likeCount) + " like"
-            } else{
-                cell.likesLabel.text = String(likeCount) + " likes"
+            cell.likesLabel.text = String(likeCount) + " like"
+        } else{
+            cell.likesLabel.text = String(likeCount) + " likes"
         }
         
         cell.instagramPost = posts[indexPath.row]
         
         cell.currentID = posts[indexPath.row].objectId
         
+        
+        cell.profileImageView.layer.masksToBounds = false
+        cell.profileImageView.layer.cornerRadius = cell.profileImageView.frame.size.height/2
+        cell.profileImageView.clipsToBounds = true
+        
+        
+        if user["profilePic"] != nil {
+            cell.profileImageView.file = user["profilePic"] as? PFFile
+            cell.profileImageView.loadInBackground()
+        }
+        
         return cell
     }
     
-    
+    //Passes data to the detailViewController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let cell = sender as! PostTableViewCell
         if let indexPath = postsTableView.indexPath(for: cell){
             let post = posts[indexPath.row]
             let postDetailViewController = segue.destination as! DetailViewController
             postDetailViewController.post = post
+            postDetailViewController.currentID = posts[indexPath.row].objectId
         }
+        
         
     }
     
+    //Infinite scrolling, increases the query.limit
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (!isMoreDataLoading){
             let scrollViewContentHeight = postsTableView.contentSize.height
@@ -114,6 +130,7 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    //Fetch data
     func queryParse() {
         let query = PFQuery(className: "Post")
         query.addDescendingOrder("createdAt")
@@ -124,6 +141,7 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
             if let posts = posts {
                 self.posts = posts
                 self.postsTableView.reloadData()
+                self.activityIndicator.stopAnimating()
                 
             }
             else {
@@ -132,7 +150,7 @@ class PhotoFeedViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         self.isMoreDataLoading = false
-        activityIndicator.stopAnimating()
+        
     }
     
 }

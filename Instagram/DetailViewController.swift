@@ -11,8 +11,10 @@ import Parse
 import ParseUI
 
 class DetailViewController: UIViewController {
-
+    
     var post: PFObject!
+    
+    var currentID: String!
     
     @IBOutlet weak var likeButton: UIButton!
     
@@ -22,9 +24,13 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var timestampLabel: UILabel!
     
+    @IBOutlet weak var profileImageView: PFImageView!
+    
+    @IBOutlet weak var userCaptionLabel: UILabel!
     
     @IBOutlet weak var likesLabel: UILabel!
     
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var captionLabel: UILabel!
     
@@ -35,16 +41,19 @@ class DetailViewController: UIViewController {
         }
     }
     
-    var currentID: String!
-    
+    override func viewWillAppear(_ animated: Bool) {
+        self.activityIndicator.startAnimating()
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Fetches data every second
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.fetchPostData), userInfo: nil, repeats: true)
     }
     
-    
+    //Updates the likeCount
     @IBAction func likePost(_ sender: UIButton) {
         let query = PFQuery(className: "Post")
         print("RUNNING")
@@ -61,16 +70,18 @@ class DetailViewController: UIViewController {
         }
     }
     
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    //Fetches data that is passed from segue
     func fetchPostData() {
         if let post = post {
             let user = post["author"] as! PFUser
             userLabel.text = user.username!
+            userCaptionLabel.text = user.username!
             
             let caption = post["caption"] as! String
             captionLabel.text = caption
@@ -82,23 +93,27 @@ class DetailViewController: UIViewController {
                 likesLabel.text = String(likeCount) + " likes"
             }
             
+            self.profileImageView.file = user["profilePic"] as? PFFile
+            self.profileImageView.loadInBackground()
+            
+            profileImageView.layer.borderWidth=1.0
+            profileImageView.layer.masksToBounds = false
+            profileImageView.layer.borderColor = UIColor.white.cgColor
+            profileImageView.layer.cornerRadius = profileImageView.frame.size.height/2
+            profileImageView.clipsToBounds = true
             
             
             self.instagramPost = post
             
-            let timeStamp = post.createdAt as! Date
-            
+            let timeStamp = post.createdAt!
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .short
             let dateString = dateFormatter.string(from: timeStamp)
             timestampLabel.text = dateString
             
-            
+            self.activityIndicator.stopAnimating()
         }
     }
-
     
-
 }

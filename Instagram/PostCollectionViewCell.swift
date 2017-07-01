@@ -11,7 +11,6 @@ import ParseUI
 import Parse
 
 class PostCollectionViewCell: UICollectionViewCell {
-
     
     @IBOutlet weak var postImageView: PFImageView!
     

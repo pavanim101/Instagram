@@ -11,7 +11,7 @@ import Parse
 import ParseUI
 
 class ProfileViewController: UIViewController, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    
     @IBOutlet weak var collectionView: UICollectionView!
     
     var posts: [PFObject] = []
@@ -24,9 +24,8 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
     
     override func viewWillAppear(_ animated: Bool) {
         self.activityIndicator.startAnimating()
-        
     }
-
+    
     @IBOutlet weak var profileImageView: PFImageView!
     
     
@@ -34,36 +33,43 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
         super.viewDidLoad()
         
         collectionView.dataSource = self
-       
         
+        //Fetches data every second
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.queryParse), userInfo: nil, repeats: true)
-
         
+        //Collection view layour
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let cellsPerLine: CGFloat = 3;
         let interItemSpacing = layout.minimumInteritemSpacing
         let width = collectionView.frame.size.width / cellsPerLine - interItemSpacing
         layout.itemSize = CGSize(width: width, height: width * 1)
         
+        //Populates user name and profile picture
         let user = PFUser.current()!
         userLabel.text = user.username
         
         if user["profilePic"] != nil {
-        self.profileImageView.file = user["profilePic"] as? PFFile
-        self.profileImageView.loadInBackground()
-        
+            self.profileImageView.file = user["profilePic"] as? PFFile
+            self.profileImageView.layer.borderWidth=1.0
+            self.profileImageView.layer.borderColor = UIColor.white.cgColor
+            self.profileImageView.layer.masksToBounds = false
+            self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height/2
+            self.profileImageView.clipsToBounds = true
+            self.profileImageView.loadInBackground()
+            
         }
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
     }
     
     
+    //Update profile picture
     @IBAction func changeProfilePic(_ sender: UIButton) {
-        //imagePicker, save to Parse 
+        //imagePicker, save to Parse
         
         let vc = UIImagePickerController()
         vc.delegate = self
@@ -75,7 +81,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
     }
     
     
-    
+    //Opens photo library to select a new profile picture
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [String : Any]) {
         
@@ -90,8 +96,8 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
         dismiss(animated: true, completion: nil)
     }
     
+    //Log out, modal segue to log in screen
     @IBAction func logOut(_ sender: UIButton) {
-        
         PFUser.logOutInBackground { (error:Error?) in
             if let error = error {
                 print("User log in failed: \(error.localizedDescription)")
@@ -108,19 +114,19 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
         return self.posts.count
         
     }
-
     
+    //Populates the collection view with images specific to the user
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! PostCollectionViewCell
-    
+        
         cell.instagramPost = posts[indexPath.row]
         
         return cell
-    
+        
     }
-   
     
+    //Fetches data from Parse
     func queryParse() {
         let query = PFQuery(className: "Post")
         query.addDescendingOrder("createdAt")
@@ -135,7 +141,6 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
                 self.posts = posts
                 self.collectionView.reloadData()
                 self.activityIndicator.stopAnimating()
-
             }
             else {
                 print(error!.localizedDescription)
@@ -144,6 +149,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
         
     }
     
+    //Passes data to detailViewController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let cell = sender as! PostCollectionViewCell
         if let indexPath = collectionView.indexPath(for: cell){
@@ -151,7 +157,7 @@ class ProfileViewController: UIViewController, UICollectionViewDataSource, UIIma
             let postDetailViewController = segue.destination as! DetailViewController
             postDetailViewController.post = post
         }
-
-}
-
+        
+    }
+    
 }

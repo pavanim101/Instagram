@@ -11,6 +11,7 @@ import Parse
 
 class Post: NSObject {
     
+    //Saves post data to Parse
     class func postUserImage(image: UIImage!, withCaption caption: String?, withCompletion completion: PFBooleanResultBlock?) {
         
         print("creating post object")
@@ -29,7 +30,7 @@ class Post: NSObject {
         
     }
     
-    
+    //Converts UIImage into PFFile
     class func getPFFileFromImage(image: UIImage!) -> PFFile? {
         // check if image is not nil
         print("converting image!")
@@ -39,6 +40,7 @@ class Post: NSObject {
                 return PFFile(name: "image.png", data: imageData as Data)
             }
         }
+        print("returning nil")
         return nil
     }
 
