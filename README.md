@@ -36,11 +36,6 @@ The following **additional** features are implemented:
 - [X] Error alerts 
 - [X] Style login like the Instagram page
 
-Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
-
-1. I'd like to discuss futher with my peers features such as following other profiles and having their posts show up on the posts feed specifically instead of all of the posts in the Parse database.
-2. It would also be interesting to discuss custom camera and filters with my peers and see the differnt ways of implementing those features. 
-
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
@@ -54,12 +49,6 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 List an 3rd party libraries, icons, graphics, or other assets you used in your app.
 
 - [AFNetworking](https://github.com/AFNetworking/AFNetworking) - networking task library
-
-
-
-## Notes
-
-Describe any challenges encountered while building the app.
 
 ## License
 
